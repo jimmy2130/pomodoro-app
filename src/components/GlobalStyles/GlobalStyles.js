@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components/macro';
-// import { COLORS, WEIGHTS, FAMILIES } from '../../constants';
+import { COLORS, FAMILIES } from '../../constants';
 
 const GlobalStyles = createGlobalStyle`
 /* http://meyerweb.com/eric/tools/css/reset/
@@ -57,7 +57,18 @@ table {
 }
 
 html {
+	--color-primary: ${COLORS.primary};
+	--color-secondary: ${COLORS.secondary};
+	--color-tertiary: ${COLORS.tertiary};
+	--color-white: ${COLORS.white};
+	--color-offWhite: ${COLORS.offWhite};
+	--color-text: ${COLORS.text};
+	--color-background: ${COLORS.background};
+	--color-background-dark: ${COLORS.backgroundDark};
 
+  --font-family-sans-serif: ${FAMILIES.sansSerif};
+  --font-family-serif: ${FAMILIES.serif};
+  --font-family-mono: ${FAMILIES.mono};
 }
 
 #root {
@@ -77,9 +88,8 @@ html {
 }
 
 body {
-	// background-color: var(--color-offblack);
-	// background-image: url('/assets/background-stars.svg');
-	// font-family: 'Spartan', serif;
+	background-color: var(--color-background);
+	color: var(--color-text);
 }
 
 html, body, #root {
