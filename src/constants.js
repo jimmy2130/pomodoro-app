@@ -11,14 +11,21 @@ export const COLORS = {
 
 const BREAKPOINTS = {
   phoneMax: 587,
-}
+};
 
 export const QUERIES = {
   'phoneAndDown': `(max-width: ${BREAKPOINTS.phoneMax / 16}rem)`,
-}
+};
 
 export const FAMILIES = {
 	sansSerif: '"Kumbh Sans", sans-serif',
 	serif: '"Roboto Slab", serif',
 	mono: '"Space Mono", monospace',
+};
+
+export const BUTTON_TEXT = {
+	start: 'start',
+	playing: 'pause',
+	pausing: 'start',
+	end: 'restart'
 };
