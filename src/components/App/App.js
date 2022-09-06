@@ -8,10 +8,10 @@ const App = () => {
 		<Wrapper>
 			<Timer
 				time={0.1}
-				color="secondary"
+				color="primary"
 				size="big"
-				// fontFamily="sansSerif"
-				fontFamily="serif"
+				fontFamily="sansSerif"
+				// fontFamily="serif"
 				// fontFamily="mono"
 			/>
 		</Wrapper>
