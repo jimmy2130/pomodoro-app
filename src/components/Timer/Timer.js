@@ -59,10 +59,12 @@ const TIMER_TEXT_STYLE = {
 // 	}
 // }
 
-const Timer = ({ time, color, size, fontFamily }) => {
+const Timer = ({ config }) => {
+	const { size, color, fontFamily, clockType } = config
+	const time = config['time'][clockType]
 	const control = useAnimation()
 	const [animationState, setAnimationState] = useState('start')
-	const [counter, setCounter] = useState(time * 60)
+	const [counter, setCounter] = useState(time * 60 * 10)
 	const [key, setKey] = useState(0)
 
 	const onTick = () => {
@@ -79,7 +81,7 @@ const Timer = ({ time, color, size, fontFamily }) => {
 			})
 			control.start({
 	      pathLength: 1,
-	      transition: { duration: counter, ease: "linear" },
+	      transition: { duration: counter / 10, ease: "linear" },
 	    })
 		}
 		else if(animationState === 'playing') {
@@ -90,11 +92,11 @@ const Timer = ({ time, color, size, fontFamily }) => {
 			setAnimationState('playing')
 			control.start({
 	      pathLength: 1,
-	      transition: {	duration: counter, ease: "linear"},
+	      transition: {	duration: counter / 10, ease: "linear"},
 	    })
 		}
 		else if(animationState === 'end') {
-			setCounter(time * 60)
+			setCounter(time * 60 * 10)
 			setAnimationState('playing')
 			control.set({
 				pathLength: 0
@@ -117,6 +119,7 @@ const Timer = ({ time, color, size, fontFamily }) => {
 							'--position-top': STATUS_TEXT_STYLE[fontFamily]['positionTop'],
 							'--line-height': STATUS_TEXT_STYLE[fontFamily]['lineHeight'],
 							'--translate-x': STATUS_TEXT_STYLE[fontFamily]['translateX'],
+							'--color': COLORS[color],
 
 					}}>
 						{BUTTON_TEXT[animationState].toUpperCase()}
@@ -175,6 +178,7 @@ const PlayButtonWrapper = styled.div`
 	box-shadow: -50px -50px 100px hsl(234deg, 40%, 25%), 50px 50px 100px hsl(234deg, 45%, 13%);
 	display: grid;
 	place-content: center;
+	user-select: none;
 `
 
 const PlayButton = styled.button`
@@ -195,7 +199,7 @@ const PlayButton = styled.button`
   /* Focusing the button with a mouse, touch, or stylus */
   &:focus:not(:focus-visible) {
     outline: none;
-  }	
+  }
 `
 
 const StatusText = styled.span`
@@ -206,12 +210,19 @@ const StatusText = styled.span`
 	margin-left: auto;
 	margin-right: auto;
 	width: fit-content;
+	pointer-events: none;
+	cursor: pointer;
+
 	font-family: var(--font-family);
 	font-size: 16px;
 	font-weight: 700;
 	line-height: var(--line-height);
 	letter-spacing: 15px;
 	transform: var(--translate-x);
+
+	${PlayButton}:hover & {
+		color: var(--color);
+	}
 `
 
 const AnimationRingWrapper = styled.div`
@@ -246,6 +257,8 @@ const ClockReference = styled.div`
 	line-height: var(--line-height);
 	letter-spacing: var(--letter-spacing);
 	color: transparent;
+	pointer-events: none;
+	cursor: pointer;
 `
 
 const StatusTextReference = styled.span`
@@ -263,6 +276,8 @@ const StatusTextReference = styled.span`
 	letter-spacing: 15px;
 	// border: 1px solid red;
 	color: transparent;
+	pointer-events: none;
+	cursor: pointer;
 `
 
 export default Timer;

@@ -34,14 +34,12 @@ const AnimationRing = ({
 	onComplete,
 	control
 }) => {
-	console.log(animationState)
 	const { cx, cy, r, stroke, length } = SIZE[size]
 	const xEndPoint = getX(cx, r, 359.99)  // cannot draw full circle with svg arc
 	const yEndPoint = getY(cy, r, 359.99)
 
   return (
     <>
-      <Wrapper>
         <Ring
         	xmlns="http://www.w3.org/2000/svg"
         	width={length}
@@ -61,15 +59,10 @@ const AnimationRing = ({
             onAnimationComplete={onComplete}
           />
         </Ring>
-      </Wrapper>
     </>
   	
   );
 }
-
-const Wrapper = styled.div`
-	pointer-events: none;
-`
 
 const Ring = styled.svg`
 	opacity: var(--opacity);

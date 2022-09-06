@@ -27,7 +27,7 @@ const TIMER_TEXT_STYLE = {
 const TimerDisplay = ({ counter, onTick, animationState, fontFamily }) => {
 	const isOn = animationState === 'playing'
 	const showTime = getShowTime(counter)
-  useInterval(onTick, isOn ? 1000 : null)
+  useInterval(onTick, isOn ? 100 : null)
 
 	return (
 		<Wrapper>
