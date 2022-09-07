@@ -1,7 +1,8 @@
-import React from "react";
+// import React from "react";
 import styled from 'styled-components/macro';
 import { motion } from "framer-motion";
 import { COLORS, FAMILIES } from '../../constants';
+import UnstyledButton from '../UnstyledButton';
 
 const BUTTON_TEXT_SIZE = {
 	sansSerif: '14px',
@@ -15,13 +16,13 @@ const ANIMATION_TRANSLATE_X = {
 	longBreak: 236,
 }
 
-const NavigationBar = ({ config, handleClick }) => {
+const NavigationBar = ({ config, handleClick, showMenu }) => {
 	const { color, clockType } = config
 	return (
 		<NavigationWrapper>
-			<NavigationButton config={config} id="pomodoro" handleClick={handleClick}>pomodoro</NavigationButton>
-			<NavigationButton config={config} id="shortBreak" handleClick={handleClick}>short break</NavigationButton>
-			<NavigationButton config={config} id="longBreak" handleClick={handleClick}>long break</NavigationButton>
+			<NavigationButton config={config} showMenu={showMenu} id="pomodoro" handleClick={handleClick}>pomodoro</NavigationButton>
+			<NavigationButton config={config} showMenu={showMenu} id="shortBreak" handleClick={handleClick}>short break</NavigationButton>
+			<NavigationButton config={config} showMenu={showMenu} id="longBreak" handleClick={handleClick}>long break</NavigationButton>
 			<Floater
 				initial={{translateX: ANIMATION_TRANSLATE_X[clockType]}}
 			  animate={{translateX: ANIMATION_TRANSLATE_X[clockType]}}
@@ -32,7 +33,7 @@ const NavigationBar = ({ config, handleClick }) => {
 	)
 }
 
-const NavigationButton = ({ children, config, id, handleClick }) => {
+const NavigationButton = ({ children, showMenu, config, id, handleClick }) => {
 	const { color, fontFamily, clockType } = config
 	return (
 		<NavigationButtonWrapper
@@ -44,6 +45,7 @@ const NavigationButton = ({ children, config, id, handleClick }) => {
 				'--color': clockType === id ? COLORS['background'] : COLORS['text'],
 				'--hover-color': clockType === id ? COLORS['background'] : COLORS['white'],
 			}}
+			tabIndex={showMenu ? -1 : 0}
 		>
 			{children}
 		</NavigationButtonWrapper>
@@ -60,19 +62,13 @@ const NavigationWrapper = styled.div`
 	isolation: isolate;
 `
 
-const NavigationButtonWrapper = styled.button`
-  display: block;
-  margin: 0;
-  padding: 0;
+const NavigationButtonWrapper = styled(UnstyledButton)`
 	width: 120px;
 	height: 48px;
-  border: none;
-	background: transparent;
 	color: var(--color);
 	font-family: var(--font-family);
 	font-size: var(--font-size);
 	font-weight: 700;
-  cursor: pointer;
   z-index: 1;
 
   &:hover {
@@ -81,10 +77,6 @@ const NavigationButtonWrapper = styled.button`
 
   &:focus {
     outline-offset: -4px;
-  }
-  /* Focusing the button with a mouse, touch, or stylus */
-  &:focus:not(:focus-visible) {
-    outline: none;
   }
 `
 

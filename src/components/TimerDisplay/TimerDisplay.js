@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import styled from 'styled-components/macro';
 import { useInterval, getShowTime } from './TimerDisplay.helpers';
 import { FAMILIES } from '../../constants';

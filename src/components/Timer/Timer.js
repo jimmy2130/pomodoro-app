@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAnimation } from "framer-motion";
 import styled from 'styled-components/macro';
 import AnimationRing from '../AnimationRing';
 import TimerDisplay from '../TimerDisplay';
+import UnstyledButton from '../UnstyledButton';
 import { COLORS, BUTTON_TEXT, FAMILIES } from '../../constants';
 
 const STATUS_TEXT_STYLE = {
@@ -59,7 +60,7 @@ const TIMER_TEXT_STYLE = {
 // 	}
 // }
 
-const Timer = ({ config }) => {
+const Timer = ({ config, showMenu }) => {
 	const { size, color, fontFamily, clockType } = config
 	const time = config['time'][clockType]
 	const control = useAnimation()
@@ -112,7 +113,10 @@ const Timer = ({ config }) => {
 	return (
 		<>
 			<PlayButtonWrapper>
-				<PlayButton onClick={handleAnimationState}>
+				<PlayButton
+					onClick={handleAnimationState}
+					tabIndex={showMenu ? -1 : 0}
+				>
 					<StatusText
 						style={{
 							'--font-family': FAMILIES[fontFamily],
@@ -181,25 +185,12 @@ const PlayButtonWrapper = styled.div`
 	user-select: none;
 `
 
-const PlayButton = styled.button`
-  display: block;
-  margin: 0;
-  padding: 0;
+const PlayButton = styled(UnstyledButton)`
   width: 366px;
   height: 366px;
-  border: none;
   border-radius: 50%;
   background: ${COLORS.backgroundDark};
   color: ${COLORS.text};
-  cursor: pointer;
-
-  &:focus {
-    outline-offset: 2px;
-  }
-  /* Focusing the button with a mouse, touch, or stylus */
-  &:focus:not(:focus-visible) {
-    outline: none;
-  }
 `
 
 const StatusText = styled.span`

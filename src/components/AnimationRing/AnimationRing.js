@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import styled from 'styled-components/macro';
 import { motion } from "framer-motion";
 import { getX, getY } from './AnimationRing.helpers'
