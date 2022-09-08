@@ -1,25 +1,17 @@
-// import React from "react";
 import styled from 'styled-components/macro';
 import { motion } from "framer-motion";
-import { COLORS, FAMILIES } from '../../constants';
-import UnstyledButton from '../UnstyledButton';
+import { COLORS, QUERIES, BREAKPOINTS } from '../../constants';
+import NavigationButton from './NavigationButton';
 
-const BUTTON_TEXT_SIZE = {
-	sansSerif: '14px',
-	serif: '14px',
-	mono: '13px',
-}
-
-const ANIMATION_TRANSLATE_X = {
-	pomodoro: 1,
-	shortBreak: 118,
-	longBreak: 236,
-}
-
-const NavigationBar = ({ config, handleClick, showMenu }) => {
+const NavigationBar = ({ config, handleClick, showMenu, size }) => {
 	const { color, clockType } = config
+	const ANIMATION_TRANSLATE_X = {
+	pomodoro: 1,
+	shortBreak: size.width > BREAKPOINTS.phoneMax ? 118 : 106,
+	longBreak: size.width > BREAKPOINTS.phoneMax ? 236 : 212,
+}
 	return (
-		<NavigationWrapper>
+		<Wrapper>
 			<NavigationButton config={config} showMenu={showMenu} id="pomodoro" handleClick={handleClick}>pomodoro</NavigationButton>
 			<NavigationButton config={config} showMenu={showMenu} id="shortBreak" handleClick={handleClick}>short break</NavigationButton>
 			<NavigationButton config={config} showMenu={showMenu} id="longBreak" handleClick={handleClick}>long break</NavigationButton>
@@ -29,55 +21,24 @@ const NavigationBar = ({ config, handleClick, showMenu }) => {
 			  transition={{duration: 0.2, ease: 'easeOut'}}
 				style={{'--background': COLORS[color]}}
 			/>
-		</NavigationWrapper>
+		</Wrapper>
 	)
 }
 
-const NavigationButton = ({ children, showMenu, config, id, handleClick }) => {
-	const { color, fontFamily, clockType } = config
-	return (
-		<NavigationButtonWrapper
-			onClick={() => handleClick(id)}
-			style={{
-				'--background': clockType === id ? COLORS[color] : COLORS['backgroundDark'],
-				'--font-family': FAMILIES[fontFamily],
-				'--font-size': BUTTON_TEXT_SIZE[fontFamily],
-				'--color': clockType === id ? COLORS['background'] : COLORS['text'],
-				'--hover-color': clockType === id ? COLORS['background'] : COLORS['white'],
-			}}
-			tabIndex={showMenu ? -1 : 0}
-		>
-			{children}
-		</NavigationButtonWrapper>
-	)
-}
-
-const NavigationWrapper = styled.div`
+const Wrapper = styled.div`
 	position: relative;
 	max-width: 373px;
 	padding: 8px;
+	margin-left: 24px;
+	margin-right: 24px;
 	border-radius: 31.5px;
 	background: ${COLORS.backgroundDark};
 	display: flex;
 	isolation: isolate;
-`
-
-const NavigationButtonWrapper = styled(UnstyledButton)`
-	width: 120px;
-	height: 48px;
-	color: var(--color);
-	font-family: var(--font-family);
-	font-size: var(--font-size);
-	font-weight: 700;
-  z-index: 1;
-
-  &:hover {
-  	color: var(--hover-color);
-  }
-
-  &:focus {
-    outline-offset: -4px;
-  }
+	@media ${QUERIES.phoneAndDown} {
+		padding-left: 6px;
+		padding-right: 6px;
+	}
 `
 
 const Floater = styled(motion.div)`
@@ -86,6 +47,10 @@ const Floater = styled(motion.div)`
 	height: 48px;
 	border-radius: 23.5px;
 	background: var(--background);
+
+	@media ${QUERIES.phoneAndDown} {
+		width: 106px;
+	}
 `
 
 export default NavigationBar;

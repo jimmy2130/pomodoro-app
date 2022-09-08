@@ -5,9 +5,10 @@ import Spacer from '../Spacer';
 import Timer from '../Timer';
 import NavigationBar from '../NavigationBar';
 import SettingsMenu from '../SettingsMenu';
-import { SettingsIcon, Logo } from '../../svg';
 import UnstyledButton from '../UnstyledButton';
-
+import { BREAKPOINTS, QUERIES } from '../../constants';
+import { SettingsIcon, Logo } from '../../svg';
+import useWindowSize from './use-window-size.hook';
 
 const App = () => {
 	const [showMenu, setShowMenu] = useState(false)
@@ -24,6 +25,7 @@ const App = () => {
 	})
 	const [timerKey, setTimerKey] = useState(0)
 	const [menuKey, setMenuKey] = useState(0)
+	const size = useWindowSize();
 	const openBtnRef = useRef(null)
 	const closeBtnRef = useRef(null)
 
@@ -52,29 +54,54 @@ const App = () => {
 	}
 
 	return (
-		<>
-			<Spacer size="48"/>
-			<MiddleWrapper>
-				<Logo/>
-			</MiddleWrapper>
-			<Spacer size="55"/>
-			<MiddleWrapper>
-				<NavigationBar config={config} handleClick={handleNavClick} showMenu={showMenu}/>
-			</MiddleWrapper>
-			<Spacer size="45"/>
-			<MiddleWrapper>
-				<Timer config={config} showMenu={showMenu} key={timerKey}/>
-			</MiddleWrapper>
-			<Spacer size={63 - 15}/>
-			<SettingsMenu
-				key={menuKey}
-				isOpen={showMenu}
-				onDismiss={handleCloseMenu}
-				ref={closeBtnRef}
-				config={config}
-				setConfig={setConfig}
-				renewTimer={renewTimer}
+		<Wrapper>
+			<Spacer
+				size={
+					size.width > BREAKPOINTS.tabletMax ? 48 : (
+						size.width > BREAKPOINTS.phoneMax ? 80 : 32
+					)
+				}
 			/>
+			<LogoWrapper>
+				<Logo/>
+			</LogoWrapper>
+			<Spacer size={size.width > BREAKPOINTS.phoneMax ? 55 : 45}/>
+			<NavigationWrapper>
+				<NavigationBar
+					config={config}
+					handleClick={handleNavClick}
+					showMenu={showMenu}
+					size={size}
+				/>
+			</NavigationWrapper>
+			<Spacer
+				size={
+					size.width > BREAKPOINTS.tabletMax ? 45 : (
+						size.width > BREAKPOINTS.phoneMax ? 109 : 48
+					)
+				}
+			/>
+			<TimerWrapper>
+				<Timer config={config} showMenu={showMenu} key={timerKey}/>
+			</TimerWrapper>
+			<Spacer
+				size={
+					size.width > BREAKPOINTS.tabletMax ? 63 - 15 : (
+						size.width > BREAKPOINTS.phoneMax ? 144 - 15 : 79 - 15
+					)
+				}
+			/>
+			<MenuWrapper>
+				<SettingsMenu
+					key={menuKey}
+					isOpen={showMenu}
+					onDismiss={handleCloseMenu}
+					ref={closeBtnRef}
+					config={config}
+					setConfig={setConfig}
+					renewTimer={renewTimer}
+				/>
+			</MenuWrapper>
 			<MiddleWrapper>
 				<OpenBtn
 					onClick={handleOpenMenu}
@@ -84,9 +111,13 @@ const App = () => {
 					<SettingsIcon/>
 				</OpenBtn>
 			</MiddleWrapper>
-		</>
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled.div`
+	isolation: isolate;
+`
 
 const MiddleWrapper = styled.div`
 	width: fit-content;
@@ -94,8 +125,34 @@ const MiddleWrapper = styled.div`
 	margin-right: auto;
 `
 
+const LogoWrapper = styled(MiddleWrapper)`
+	@media ${QUERIES.phoneAndDown} {
+		transform: scale(0.77);
+	}
+`
+
+const NavigationWrapper = styled(MiddleWrapper)`
+	position: relative;
+	z-index: 2;
+`
+
+const TimerWrapper = styled(MiddleWrapper)`
+	position: relative;
+	z-index: 1;
+`
+
+const MenuWrapper = styled.div`
+	position: relative;
+	z-index: 3;
+`
+
 const OpenBtn = styled(UnstyledButton)`
 	padding: 15px;
+	&:hover, &:focus {
+		& path {
+			opacity: 1;
+		}
+	}
 `
 
 export default App;

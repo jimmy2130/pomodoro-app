@@ -9,11 +9,13 @@ export const COLORS = {
 	backgroundDark: 'hsl(234deg 39% 14%)',
 };
 
-const BREAKPOINTS = {
+export const BREAKPOINTS = {
+	tabletMax: 768,
   phoneMax: 587,
 };
 
 export const QUERIES = {
+	'tabletAndDown': `(max-width: ${BREAKPOINTS.tabletMax / 16}rem)`,
   'phoneAndDown': `(max-width: ${BREAKPOINTS.phoneMax / 16}rem)`,
 };
 
@@ -21,11 +23,4 @@ export const FAMILIES = {
 	sansSerif: '"Kumbh Sans", sans-serif',
 	serif: '"Roboto Slab", serif',
 	mono: '"Space Mono", monospace',
-};
-
-export const BUTTON_TEXT = {
-	start: 'start',
-	playing: 'pause',
-	pausing: 'start',
-	end: 'restart'
 };

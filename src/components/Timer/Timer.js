@@ -1,64 +1,15 @@
 import { useState } from "react";
 import { useAnimation } from "framer-motion";
 import styled from 'styled-components/macro';
-import AnimationRing from '../AnimationRing';
-import TimerDisplay from '../TimerDisplay';
+import AnimationRing from './AnimationRing';
+import TimerDisplay from './TimerDisplay';
 import UnstyledButton from '../UnstyledButton';
-import { COLORS, BUTTON_TEXT, FAMILIES } from '../../constants';
-
-const STATUS_TEXT_STYLE = {
-	sansSerif: {
-		positionTop: '281px',
-		lineHeight: '19px',
-		translateX: 'translateX(7px)',
-	},
-	serif: {
-		positionTop: '279px',
-		lineHeight: '21px',
-		translateX: 'translateX(7px)',
-	},
-	mono: {
-		positionTop: '278px',
-		lineHeight: '24px',
-		translateX: 'translateX(7px)',
-	}
-}
-
-const TIMER_TEXT_STYLE = {
-	sansSerif: {
-		positionTop: '161px',
-		positionLeft: '79px',  //prevent timer text from moving when counting down
-		lineHeight: '80px',
-		letterSpacing: '-5px',
-		fontWeight: 700,
-	},
-	serif: {
-		positionTop: '127px',
-		positionLeft: '79px',
-		lineHeight: '132px',
-		letterSpacing: '0px',
-		fontWeight: 700,
-	},
-	mono: {
-		positionTop: '120px',
-		positionLeft: '72px',
-		lineHeight: '148px',
-		letterSpacing: '-10px',
-		fontWeight: 400,
-	}	
-}
-
-// const MOBILE_STATUS_TEXT_STYLE = {
-// 	sans: {
-
-// 	},
-// 	sansSerif: {
-
-// 	},
-// 	mono: {
-		
-// 	}
-// }
+import { COLORS, FAMILIES, QUERIES } from '../../constants';
+import {
+	BUTTON_TEXT,
+	STATUS_TEXT_STYLE,
+	TIMER_TEXT_STYLE
+} from './Timer.constants';
 
 const Timer = ({ config, showMenu }) => {
 	const { size, color, fontFamily, clockType } = config
@@ -70,7 +21,7 @@ const Timer = ({ config, showMenu }) => {
 
 	const onTick = () => {
 		setCounter(counter - 1)
-		if(counter - 1 === 0) {
+		if(counter - 1 < 0) {
 			setAnimationState('end')
 		}
 	}
@@ -111,69 +62,67 @@ const Timer = ({ config, showMenu }) => {
 	const onComplete = () => setKey(key + 1)
 
 	return (
-		<>
-			<PlayButtonWrapper>
-				<PlayButton
-					onClick={handleAnimationState}
-					tabIndex={showMenu ? -1 : 0}
-				>
-					<StatusText
-						style={{
-							'--font-family': FAMILIES[fontFamily],
-							'--position-top': STATUS_TEXT_STYLE[fontFamily]['positionTop'],
-							'--line-height': STATUS_TEXT_STYLE[fontFamily]['lineHeight'],
-							'--translate-x': STATUS_TEXT_STYLE[fontFamily]['translateX'],
-							'--color': COLORS[color],
-
-					}}>
-						{BUTTON_TEXT[animationState].toUpperCase()}
-					</StatusText>
-				</PlayButton>
-				<AnimationRingWrapper>
-					<AnimationRing
-						color={color}
-						size={size}
-						onComplete={onComplete}
-						key={key}
-						control={control}
-						animationState={animationState}
-					/>
-				</AnimationRingWrapper>
-				<TimerDisplayWrapper style={{
-					'--position-top': TIMER_TEXT_STYLE[fontFamily]['positionTop'],
-					'--position-left': TIMER_TEXT_STYLE[fontFamily]['positionLeft'],
-				}}>
-					<TimerDisplay
-						counter={counter}
-						onTick={onTick}
-						animationState={animationState}
-						fontFamily={fontFamily}
-					/>
-				</TimerDisplayWrapper>
-				<ClockReference style={{
-					'--font-family': FAMILIES[fontFamily],
-					'--position-top': TIMER_TEXT_STYLE[fontFamily]['positionTop'],
-					'--position-left': TIMER_TEXT_STYLE[fontFamily]['positionLeft'],
-					'--line-height': TIMER_TEXT_STYLE[fontFamily]['lineHeight'],
-					'--font-weight': TIMER_TEXT_STYLE[fontFamily]['fontWeight'],
-					'--letter-spacing': TIMER_TEXT_STYLE[fontFamily]['letterSpacing'],
-				}}>
-					00:06
-				</ClockReference>
-				<StatusTextReference
+		<Wrapper>
+			<PlayButton
+				onClick={handleAnimationState}
+				tabIndex={showMenu ? -1 : 0}
+			>
+				<StatusText
 					style={{
 						'--font-family': FAMILIES[fontFamily],
 						'--position-top': STATUS_TEXT_STYLE[fontFamily]['positionTop'],
 						'--line-height': STATUS_TEXT_STYLE[fontFamily]['lineHeight'],
-					}}>
+						'--translate-x': STATUS_TEXT_STYLE[fontFamily]['translateX'],
+						'--color': COLORS[color],
+
+				}}>
 					{BUTTON_TEXT[animationState].toUpperCase()}
-				</StatusTextReference>
-			</PlayButtonWrapper>
-		</>
+				</StatusText>
+			</PlayButton>
+			<AnimationRingWrapper>
+				<AnimationRing
+					color={color}
+					size={size}
+					onComplete={onComplete}
+					key={key}
+					control={control}
+					animationState={animationState}
+				/>
+			</AnimationRingWrapper>
+			<TimerDisplayWrapper style={{
+				'--position-top': TIMER_TEXT_STYLE[fontFamily]['positionTop'],
+				'--position-left': TIMER_TEXT_STYLE[fontFamily]['positionLeft'],
+			}}>
+				<TimerDisplay
+					counter={counter}
+					onTick={onTick}
+					animationState={animationState}
+					fontFamily={fontFamily}
+				/>
+			</TimerDisplayWrapper>
+			<ClockReference style={{
+				'--font-family': FAMILIES[fontFamily],
+				'--position-top': TIMER_TEXT_STYLE[fontFamily]['positionTop'],
+				'--position-left': TIMER_TEXT_STYLE[fontFamily]['positionLeft'],
+				'--line-height': TIMER_TEXT_STYLE[fontFamily]['lineHeight'],
+				'--font-weight': TIMER_TEXT_STYLE[fontFamily]['fontWeight'],
+				'--letter-spacing': TIMER_TEXT_STYLE[fontFamily]['letterSpacing'],
+			}}>
+				00:06
+			</ClockReference>
+			<StatusTextReference
+				style={{
+					'--font-family': FAMILIES[fontFamily],
+					'--position-top': STATUS_TEXT_STYLE[fontFamily]['positionTop'],
+					'--line-height': STATUS_TEXT_STYLE[fontFamily]['lineHeight'],
+				}}>
+				{BUTTON_TEXT[animationState].toUpperCase()}
+			</StatusTextReference>
+		</Wrapper>
 	)
 }
 
-const PlayButtonWrapper = styled.div`
+const Wrapper = styled.div`
 	position: relative;
 	width: 410px;
 	height: 410px;
@@ -183,6 +132,9 @@ const PlayButtonWrapper = styled.div`
 	display: grid;
 	place-content: center;
 	user-select: none;
+	@media ${QUERIES.phoneAndDown} {
+		transform: scale(calc(300 / 410))
+	}
 `
 
 const PlayButton = styled(UnstyledButton)`

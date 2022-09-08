@@ -1,87 +1,50 @@
-import { forwardRef, useRef, useState } from "react";
+import { forwardRef, useRef } from "react";
 import styled from 'styled-components/macro';
 import UnstyledButton from '../UnstyledButton';
-import TimeSelector from '../TimeSelector';
-import FontSelector from '../FontSelector';
-import ColorSelector from '../ColorSelector';
+import TimeSelector from './TimeSelector';
+import FontSelector from './FontSelector';
+import ColorSelector from './ColorSelector';
 import { CloseIcon } from '../../svg';
-import { COLORS, FAMILIES } from '../../constants';
+import { COLORS, FAMILIES, QUERIES } from '../../constants';
+import { getDialogFn, validateTime } from './SettingsMenu.helpers';
+import { localConfigReducer, useLocalConfig } from './use-local-config.hook';
 
 const SettingsMenu = forwardRef((props, ref) => {
 	const { isOpen, onDismiss, config, setConfig, renewTimer } = props
-	const { color, fontFamily, time: { pomodoro, shortBreak, longBreak }, clockType} = config
-
-	const [localConfig, setLocalConfig] = useState({
-		color: color,
-		size: 'big',
-		fontFamily: fontFamily,
-		time: {
-			pomodoro: pomodoro,
-			shortBreak: shortBreak,
-			longBreak: longBreak,
-		},
-		clockType: clockType,
-	})
-	const handleColor = (newColor) => setLocalConfig({...localConfig, color: newColor})
-	const handleFont = (newFont) => setLocalConfig({...localConfig, fontFamily: newFont})
-	const handlePomodoro = (newTime) => {
-		newTime = parseInt(newTime)
-		newTime = newTime > 99 ? 99 : newTime
-		let oldTime = localConfig.time
-		setLocalConfig({...localConfig, time: {...oldTime, pomodoro: newTime}})
-	}
-	const handleShortBreak = (newTime) => {
-		newTime = parseInt(newTime)
-		newTime = newTime > 99 ? 99 : newTime
-		let oldTime = localConfig.time
-		setLocalConfig({...localConfig, time: {...oldTime, shortBreak: newTime}})
-	}
-	const handleLongBreak = (newTime) => {
-		newTime = parseInt(newTime)
-		newTime = newTime > 99 ? 99 : newTime
-		let oldTime = localConfig.time
-		setLocalConfig({...localConfig, time: {...oldTime, longBreak: newTime}})
-	}
-	const handleIncrease = (clockType) => {
-		let oldTime = localConfig.time
-		let oldCounter = localConfig.time[clockType]
-		oldCounter = oldCounter + 1 > 99 ? 99 : oldCounter + 1
-		setLocalConfig({...localConfig, time: {...oldTime, [clockType]: oldCounter}})
-	}
-	const handleDecrease = (clockType) => {
-		let oldTime = localConfig.time
-		let oldCounter = localConfig.time[clockType]
-		oldCounter = oldCounter - 1 < 0 ? 0 : oldCounter - 1
-		setLocalConfig({...localConfig, time: {...oldTime, [clockType]: oldCounter}})
-	}
-	const handleApply = () => {
-		setConfig(localConfig)
-		renewTimer()
-	}
-
 	const contentRef = useRef(null)
 	const applyBtnRef = useRef(null)
 
-	const handleEscape = (e) => {
-		if(e.key === 'Escape') {
-			onDismiss()
-		}
-	}
-	const handleMouseEscape = (e) => {
-		if(!contentRef.current.contains(e.target))
-			onDismiss()
-	}
-	const moveToFirst = (e) => {
-		if(e.key === 'Tab' && !e.shiftKey) {
-			e.preventDefault()
-			ref.current.focus()
-		}
-	}
-	const backToLast = (e) => {
-		if(e.key === 'Tab' && e.shiftKey) {
-			e.preventDefault()
-			applyBtnRef.current.focus()
-		}
+	const {
+		handleColor,
+		handleFont,
+		handleTime,
+		handleIncrease,
+		handleDecrease,
+		localConfig
+	} = useLocalConfig(localConfigReducer, config)
+
+	const {
+		handleEscape,
+		handleMouseEscape,
+		moveToFirst,
+		backToLast
+	} = getDialogFn(ref, applyBtnRef, contentRef, onDismiss)
+
+	const handleApply = () => {
+		let clockType = config.clockType
+		let { color, fontFamily, time: { pomodoro, shortBreak, longBreak }} = localConfig
+		setConfig({
+			...config,
+			color: color,
+			fontFamily: fontFamily,
+			time: {
+				pomodoro: validateTime(pomodoro),
+				shortBreak: validateTime(shortBreak),
+				longBreak: validateTime(longBreak)
+			}
+		})
+		if(validateTime(config['time'][clockType]) !== validateTime(localConfig['time'][clockType]))
+			renewTimer()
 	}
 
   return (
@@ -90,66 +53,72 @@ const SettingsMenu = forwardRef((props, ref) => {
   		onKeyUp={(e) => handleEscape(e)}
   		onClick={(e) => handleMouseEscape(e)}
   	>
-  		<DialogOverlay></DialogOverlay>
-  		<DialogContentWrapper>
-  			<DialogContent ref={contentRef}>
-  				<CloseBtn
-  					onClick={onDismiss}
-  					ref={ref}
-  					onKeyDown={(e) => backToLast(e)}
-  				>
-  					<CloseIcon/>
-  				</CloseBtn>
-  				<Title>Settings</Title>
-  				<TimeSection>
-  					<TimeTitle>Time(minutes)</TimeTitle>
-  					<TimeSelectorGroup>
-  						<TimeSelector
-  							time={localConfig.time.pomodoro}
-  							onChange={handlePomodoro}
-  							onIncrease={() => handleIncrease('pomodoro')}
-  							onDecrease={() => handleDecrease('pomodoro')}
-  						>pomodoro
-  						</TimeSelector>
-  						<TimeSelector
-  							time={localConfig.time.shortBreak}
-  							onChange={handleShortBreak}
-  							onIncrease={() => handleIncrease('shortBreak')}
-  							onDecrease={() => handleDecrease('shortBreak')}
-  						>short break
-  						</TimeSelector>
-  						<TimeSelector
-  							time={localConfig.time.longBreak}
-  							onChange={handleLongBreak}
-  							onIncrease={() => handleIncrease('longBreak')}
-  							onDecrease={() => handleDecrease('longBreak')}
-  						>long break
-  						</TimeSelector>
-  					</TimeSelectorGroup>
-  				</TimeSection>
-  				<FontSection>
-  					<FontTitle>font</FontTitle>
-  					<FontSelectorGroup>
-  						<FontSelector family={localConfig.fontFamily} familyId="sansSerif" onChange={handleFont}>Aa</FontSelector>
-  						<FontSelector family={localConfig.fontFamily} familyId="serif" onChange={handleFont}>Aa</FontSelector>
-  						<FontSelector family={localConfig.fontFamily} familyId="mono" onChange={handleFont}>Aa</FontSelector>
-  					</FontSelectorGroup>
-  				</FontSection>
-  				<ColorSection>
-  					<ColorTitle>Color</ColorTitle>
-  					<ColorSelectorGroup>
-  						<ColorSelector color={localConfig.color} colorId="primary" onChange={handleColor}></ColorSelector>
-  						<ColorSelector color={localConfig.color} colorId="secondary" onChange={handleColor}></ColorSelector>
-  						<ColorSelector color={localConfig.color} colorId="tertiary" onChange={handleColor}></ColorSelector>
-  					</ColorSelectorGroup>
-  				</ColorSection>
-  			</DialogContent>
-  			<ApplyButton
-  				ref={applyBtnRef}
-  				onClick={handleApply}
-  				onKeyDown={(e) => moveToFirst(e)}
-  			>Apply</ApplyButton>
-  		</DialogContentWrapper>
+  		<DialogOverlay>
+	  		<DialogContentWrapper>
+	  			<DialogContent ref={contentRef}>
+	  				<CloseBtn
+	  					onClick={onDismiss}
+	  					ref={ref}
+	  					onKeyDown={(e) => backToLast(e)}
+	  				>
+	  					<CloseIcon/>
+	  				</CloseBtn>
+	  				<Title>Settings</Title>
+	  				<TimeSection>
+	  					<TimeTitle>Time (minutes)</TimeTitle>
+	  					<TimeSelectorGroup>
+	  						<TimeSelector
+	  							id="pomodoro"
+	  							time={localConfig.time.pomodoro}
+	  							onChange={handleTime}
+	  							onIncrease={() => handleIncrease('pomodoro')}
+	  							onDecrease={() => handleDecrease('pomodoro')}
+	  						>pomodoro
+	  						</TimeSelector>
+	  						<TimeSelector
+	  							id="shortBreak"
+	  							time={localConfig.time.shortBreak}
+	  							onChange={handleTime}
+	  							onIncrease={() => handleIncrease('shortBreak')}
+	  							onDecrease={() => handleDecrease('shortBreak')}
+	  						>short break
+	  						</TimeSelector>
+	  						<TimeSelector
+	  							id="longBreak"
+	  							time={localConfig.time.longBreak}
+	  							onChange={handleTime}
+	  							onIncrease={() => handleIncrease('longBreak')}
+	  							onDecrease={() => handleDecrease('longBreak')}
+	  						>long break
+	  						</TimeSelector>
+	  					</TimeSelectorGroup>
+	  				</TimeSection>
+	  				<FontSection>
+	  					<FontTitle>font</FontTitle>
+	  					<FontSelectorGroup>
+	  						<FontSelector family={localConfig.fontFamily} familyId="sansSerif" onChange={handleFont}>Aa</FontSelector>
+	  						<FontSelector family={localConfig.fontFamily} familyId="serif" onChange={handleFont}>Aa</FontSelector>
+	  						<FontSelector family={localConfig.fontFamily} familyId="mono" onChange={handleFont}>Aa</FontSelector>
+	  					</FontSelectorGroup>
+	  				</FontSection>
+	  				<ColorSection>
+	  					<ColorTitle>Color</ColorTitle>
+	  					<ColorSelectorGroup>
+	  						<ColorSelector color={localConfig.color} colorId="primary" onChange={handleColor}></ColorSelector>
+	  						<ColorSelector color={localConfig.color} colorId="secondary" onChange={handleColor}></ColorSelector>
+	  						<ColorSelector color={localConfig.color} colorId="tertiary" onChange={handleColor}></ColorSelector>
+	  					</ColorSelectorGroup>
+	  				</ColorSection>
+	  			</DialogContent>
+	  			<ApplyButton
+	  				ref={applyBtnRef}
+	  				onClick={handleApply}
+	  				onKeyDown={(e) => moveToFirst(e)}
+	  			>Apply
+	  				<ApplyButtonMask/>
+	  			</ApplyButton>
+	  		</DialogContentWrapper>  			
+  		</DialogOverlay>
   	</Wrapper>
   );
 });
@@ -164,7 +133,7 @@ const DialogOverlay = styled.div`
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background: hsl(234deg 47% 8% / 50%)
+	background: hsl(234deg 47% 8% / 50%);
 `
 
 const DialogContentWrapper = styled.div`
@@ -176,6 +145,11 @@ const DialogContentWrapper = styled.div`
 	max-width: 540px;
 	height: 490px;
 	margin: auto;
+
+	@media ${QUERIES.phoneAndDown} {
+		max-width: 327px;
+		height: 575px;
+	}
 `
 
 const DialogContent = styled.div`
@@ -185,6 +159,12 @@ const DialogContent = styled.div`
 	background: ${COLORS.white};
 	border-radius: 25px;
 	color: ${COLORS.background};
+
+	@media ${QUERIES.phoneAndDown} {
+		border-radius: 15px;
+		height: 549px;
+		padding: 24px;
+	}
 `
 
 const CloseBtn = styled(UnstyledButton)`
@@ -192,6 +172,17 @@ const CloseBtn = styled(UnstyledButton)`
 	top: calc(47px - 15px);
 	right: calc(38px - 15px);
 	padding: 15px;
+
+	&:hover,&:focus {
+		& path {
+			opacity: 1;
+		}
+	}
+
+	@media ${QUERIES.phoneAndDown} {
+		top: calc(30px - 15px);
+		right: calc(24px - 15px);
+	}
 `
 
 const Title = styled.h2`
@@ -205,6 +196,16 @@ const Title = styled.h2`
 	line-height: 35px;
 	font-weight: 700;
 	font-family: ${FAMILIES.sansSerif};
+
+	@media ${QUERIES.phoneAndDown} {
+		padding-left: 24px;
+		padding-right: 24px;
+		padding-bottom: 28px;
+		margin-left: -24px;
+		margin-right: -24px;
+		font-size: 20px;
+		line-height: 25px;
+	}
 `
 
 const SubTitle = styled.h3`
@@ -214,6 +215,14 @@ const SubTitle = styled.h3`
 	text-transform: uppercase;
 	font-weight: 700;
 	font-family: ${FAMILIES.sansSerif};
+
+	@media ${QUERIES.phoneAndDown} {
+		font-size: 11px;
+		line-height: 14px;
+		letter-spacing: 4.23px;
+		text-align: center;
+		transform: scale(calc(11 / 13))
+	}
 `
 
 const TimeSection = styled.div`
@@ -224,11 +233,20 @@ const TimeSection = styled.div`
 
 const TimeTitle = styled(SubTitle)`
 	margin-bottom: 22px;
+
+	@media ${QUERIES.phoneAndDown} {
+		margin-bottom: 18px;
+	}
 `
 
 const TimeSelectorGroup = styled.div`
 	display: flex;
 	gap: 20px;
+
+	@media ${QUERIES.phoneAndDown} {
+		flex-direction: column;
+		gap: 8px;
+	}
 `
 
 const FontSection = styled.div`
@@ -238,6 +256,12 @@ const FontSection = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+
+	@media ${QUERIES.phoneAndDown} {
+		flex-direction: column;
+		justify-content: flex-start;
+		gap: 18px;
+	}
 `
 
 const FontTitle = styled(SubTitle)`
@@ -254,6 +278,13 @@ const ColorSection = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+
+	@media ${QUERIES.phoneAndDown} {
+		padding-top: 16px;
+		flex-direction: column;
+		justify-content: flex-start;
+		gap: 18px;
+	}
 `
 
 const ColorTitle = styled(SubTitle)`
@@ -279,6 +310,23 @@ const ApplyButton = styled(UnstyledButton)`
 	font-weight: 700;
 	font-family: ${FAMILIES.sansSerif};
 	line-height: 20px;
+`
+
+const ApplyButtonMask = styled.span`
+	display: none;
+	${ApplyButton}:hover, ${ApplyButton}:focus & {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 140px;
+		height: 53px;
+		border-radius: 26.5px;
+		background: ${COLORS.white};
+		opacity: 0.2;
+	}
 `
 
 export default SettingsMenu;

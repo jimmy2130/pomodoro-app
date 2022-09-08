@@ -1,28 +1,9 @@
 // import React from "react";
 import styled from 'styled-components/macro';
-import { useInterval, getShowTime } from './TimerDisplay.helpers';
+import { getShowTime } from './Timer.helpers';
+import { useInterval }  from './use-interval.hook';
 import { FAMILIES } from '../../constants';
-
-const TIMER_TEXT_STYLE = {
-	sansSerif: {
-		lineHeight: '80px',
-		letterSpacing: '-5px',
-		fontWeight: 700,
-		translateX: 'translateX(-2px)',
-	},
-	serif: {
-		lineHeight: '132px',
-		letterSpacing: '0px',
-		fontWeight: 700,
-		translateX: 'translateX(0px)',
-	},
-	mono: {
-		lineHeight: '148px',
-		letterSpacing: '-10px',
-		fontWeight: 400,
-		translateX: 'translateX(-6px)',
-	}
-}
+import { TIMER_TEXT_STYLE } from './Timer.constants';
 
 const TimerDisplay = ({ counter, onTick, animationState, fontFamily }) => {
 	const isOn = animationState === 'playing'
