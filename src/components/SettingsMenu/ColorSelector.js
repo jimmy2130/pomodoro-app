@@ -1,6 +1,4 @@
-// import { useRef } from "react";
 import styled from 'styled-components/macro';
-import { COLORS } from '../../constants';
 import { CheckIcon } from '../../svg';
 
 const ColorSelector = ({ color, colorId, onChange }) => {
@@ -11,9 +9,10 @@ const ColorSelector = ({ color, colorId, onChange }) => {
   				type="radio"
   				name="color"
   				value={colorId}
-  				style={{'--background': COLORS[colorId]}}
+  				style={{'--background': `var(--color-${colorId})`}}
   				onChange={(e) => onChange(e.target.value)}
   				checked={color === colorId}
+  				aria-label={`${colorId} color`}
   			/>
   			<CheckIconWrapper>
   				<CheckIcon/>
@@ -74,7 +73,7 @@ const HoverRing = styled.span`
 	height: 50px;
 	margin: auto;
 	background: transparent;
-	border: 1px solid ${COLORS.offWhite};
+	border: 1px solid var(--color-off-white);
 	border-radius: 50%;
 	pointer-events: none;
 

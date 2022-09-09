@@ -3,12 +3,6 @@ import styled from 'styled-components/macro';
 import { motion } from "framer-motion";
 import { getX, getY } from './Timer.helpers'
 
-const RING_COLOR = {
-	primary: 'var(--color-primary)',
-	secondary: 'var(--color-secondary)',
-	tertiary: 'var(--color-tertiary)'
-}
-
 const SIZE = {
 	big: {
 		length: 410,
@@ -27,10 +21,9 @@ const SIZE = {
 }
 
 const AnimationRing = ({
-	color = 'secondary',
+	color = 'primary',
 	size = 'big',
 	animationState,
-	// onUpdate,
 	onComplete,
 	control
 }) => {
@@ -52,7 +45,7 @@ const AnimationRing = ({
             d={`M${cx} ${cy - r} A ${r} ${r} 0 1 1 ${xEndPoint} ${yEndPoint}`}
             fill="transparent"
             strokeWidth={stroke}
-            stroke={RING_COLOR[color]}
+            stroke={`var(--color-${color})`}
             strokeLinecap="round"
             initial={{ pathLength: 1 }}
             animate={control}

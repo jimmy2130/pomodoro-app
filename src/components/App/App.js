@@ -6,6 +6,7 @@ import Timer from '../Timer';
 import NavigationBar from '../NavigationBar';
 import SettingsMenu from '../SettingsMenu';
 import UnstyledButton from '../UnstyledButton';
+import VisuallyHidden from '../VisuallyHidden';
 import { BREAKPOINTS, QUERIES } from '../../constants';
 import { SettingsIcon, Logo } from '../../svg';
 import useWindowSize from './use-window-size.hook';
@@ -13,15 +14,14 @@ import useWindowSize from './use-window-size.hook';
 const App = () => {
 	const [showMenu, setShowMenu] = useState(false)
 	const [config, setConfig] = useState({
-		color: 'secondary',
-		size: 'big',
+		color: 'primary',
 		fontFamily: 'sansSerif',  //sansSerif, serif, mono
 		time: {
-			pomodoro: 1,
+			pomodoro: 20,
 			shortBreak: 2,
 			longBreak: 3,
 		},
-		clockType: 'longBreak',
+		clockType: 'pomodoro',
 	})
 	const [timerKey, setTimerKey] = useState(0)
 	const [menuKey, setMenuKey] = useState(0)
@@ -62,6 +62,9 @@ const App = () => {
 					)
 				}
 			/>
+			<VisuallyHidden>
+				<h1>Pomodoro App</h1>
+			</VisuallyHidden>
 			<LogoWrapper>
 				<Logo/>
 			</LogoWrapper>
@@ -109,6 +112,7 @@ const App = () => {
 					tabIndex={showMenu ? -1 : 0}
 				>
 					<SettingsIcon/>
+					<VisuallyHidden>Open menu</VisuallyHidden>
 				</OpenBtn>
 			</MiddleWrapper>
 		</Wrapper>

@@ -1,8 +1,6 @@
-// import React from "react";
 import styled from 'styled-components/macro';
 import { getShowTime } from './Timer.helpers';
 import { useInterval }  from './use-interval.hook';
-import { FAMILIES } from '../../constants';
 import { TIMER_TEXT_STYLE } from './Timer.constants';
 
 const TimerDisplay = ({ counter, onTick, animationState, fontFamily }) => {
@@ -14,7 +12,7 @@ const TimerDisplay = ({ counter, onTick, animationState, fontFamily }) => {
 		<Wrapper>
 			<Timer
 				style={{
-					'--font-family': FAMILIES[fontFamily],
+					'--font-family': `var(--font-family-${fontFamily})`,
 					'--line-height': TIMER_TEXT_STYLE[fontFamily]['lineHeight'],
 					'--letter-spacing': TIMER_TEXT_STYLE[fontFamily]['letterSpacing'],
 					'--font-weight': TIMER_TEXT_STYLE[fontFamily]['fontWeight'],

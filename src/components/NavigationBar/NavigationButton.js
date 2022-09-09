@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import { COLORS, FAMILIES, QUERIES } from '../../constants';
+import { QUERIES } from '../../constants';
 import UnstyledButton from '../UnstyledButton';
 
 const BUTTON_TEXT_SIZE = {
@@ -14,15 +14,15 @@ const NavigationButton = ({ children, showMenu, config, id, handleClick }) => {
 		<Wrapper
 			onClick={() => handleClick(id)}
 			style={{
-				'--background': clockType === id ? COLORS[color] : COLORS['backgroundDark'],
-				'--font-family': FAMILIES[fontFamily],
+				'--background': clockType === id ? `var(--color-${color})` : 'var(--color-background-dark)',
+				'--font-family': `var(--font-family-${fontFamily})`,
 				'--font-size': BUTTON_TEXT_SIZE[fontFamily],
-				'--color': clockType === id ? COLORS['background'] : COLORS['text'],
-				'--hover-color': clockType === id ? COLORS['background'] : COLORS['white'],
+				'--color': clockType === id ? 'var(--color-background)' : 'var(--color-text)',
+				'--hover-color': clockType === id ? 'var(--color-background)' : 'var(--color-white)',
 			}}
 			tabIndex={showMenu ? -1 : 0}
 		>
-			{children}
+			<h2>{children}</h2>
 		</Wrapper>
 	)
 }
@@ -34,6 +34,7 @@ const Wrapper = styled(UnstyledButton)`
 	font-family: var(--font-family);
 	font-size: var(--font-size);
 	font-weight: 700;
+	text-transform: lowercase;
   z-index: 1;
 
   &:hover {

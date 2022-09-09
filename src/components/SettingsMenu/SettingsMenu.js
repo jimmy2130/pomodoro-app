@@ -1,11 +1,12 @@
 import { forwardRef, useRef } from "react";
 import styled from 'styled-components/macro';
-import UnstyledButton from '../UnstyledButton';
 import TimeSelector from './TimeSelector';
 import FontSelector from './FontSelector';
 import ColorSelector from './ColorSelector';
+import UnstyledButton from '../UnstyledButton';
+import VisuallyHidden from '../VisuallyHidden';
 import { CloseIcon } from '../../svg';
-import { COLORS, FAMILIES, QUERIES } from '../../constants';
+import { QUERIES } from '../../constants';
 import { getDialogFn, validateTime } from './SettingsMenu.helpers';
 import { localConfigReducer, useLocalConfig } from './use-local-config.hook';
 
@@ -62,6 +63,7 @@ const SettingsMenu = forwardRef((props, ref) => {
 	  					onKeyDown={(e) => backToLast(e)}
 	  				>
 	  					<CloseIcon/>
+	  					<VisuallyHidden>Dismiss menu</VisuallyHidden>
 	  				</CloseBtn>
 	  				<Title>Settings</Title>
 	  				<TimeSection>
@@ -94,7 +96,7 @@ const SettingsMenu = forwardRef((props, ref) => {
 	  					</TimeSelectorGroup>
 	  				</TimeSection>
 	  				<FontSection>
-	  					<FontTitle>font</FontTitle>
+	  					<FontTitle>Font</FontTitle>
 	  					<FontSelectorGroup>
 	  						<FontSelector family={localConfig.fontFamily} familyId="sansSerif" onChange={handleFont}>Aa</FontSelector>
 	  						<FontSelector family={localConfig.fontFamily} familyId="serif" onChange={handleFont}>Aa</FontSelector>
@@ -156,9 +158,9 @@ const DialogContent = styled.div`
 	position: relative;
 	height: 464px;
 	padding: 34px 39px;
-	background: ${COLORS.white};
+	background: var(--color-white);
 	border-radius: 25px;
-	color: ${COLORS.background};
+	color: var(--color-background);
 
 	@media ${QUERIES.phoneAndDown} {
 		border-radius: 15px;
@@ -195,7 +197,7 @@ const Title = styled.h2`
 	font-size: 28px;
 	line-height: 35px;
 	font-weight: 700;
-	font-family: ${FAMILIES.sansSerif};
+	font-family: var(--font-family-sansSerif);
 
 	@media ${QUERIES.phoneAndDown} {
 		padding-left: 24px;
@@ -214,7 +216,7 @@ const SubTitle = styled.h3`
 	letter-spacing: 5px;
 	text-transform: uppercase;
 	font-weight: 700;
-	font-family: ${FAMILIES.sansSerif};
+	font-family: var(--font-family-sansSerif);
 
 	@media ${QUERIES.phoneAndDown} {
 		font-size: 11px;
@@ -304,28 +306,32 @@ const ApplyButton = styled(UnstyledButton)`
 	margin-right: auto;
 	margin-top: -27px;
 	border-radius: 26.5px;
-	background: ${COLORS.primary};
-	color: ${COLORS.white};
+	background: var(--color-primary);
+	color: var(--color-white);
 	font-size: 16px;
 	font-weight: 700;
-	font-family: ${FAMILIES.sansSerif};
+	font-family: var(--font-family-sansSerif);
 	line-height: 20px;
 `
 
 const ApplyButtonMask = styled.span`
 	display: none;
-	${ApplyButton}:hover, ${ApplyButton}:focus & {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 140px;
+	height: 53px;
+	border-radius: 26.5px;
+	background: var(--color-white);
+	opacity: 0.2;
+
+	${ApplyButton}:hover & {
 		display: block;
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		width: 140px;
-		height: 53px;
-		border-radius: 26.5px;
-		background: ${COLORS.white};
-		opacity: 0.2;
+	}
+	${ApplyButton}:focus & {
+		display: block;
 	}
 `
 

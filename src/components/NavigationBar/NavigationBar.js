@@ -1,6 +1,6 @@
 import styled from 'styled-components/macro';
 import { motion } from "framer-motion";
-import { COLORS, QUERIES, BREAKPOINTS } from '../../constants';
+import { QUERIES, BREAKPOINTS } from '../../constants';
 import NavigationButton from './NavigationButton';
 
 const NavigationBar = ({ config, handleClick, showMenu, size }) => {
@@ -12,14 +12,14 @@ const NavigationBar = ({ config, handleClick, showMenu, size }) => {
 }
 	return (
 		<Wrapper>
-			<NavigationButton config={config} showMenu={showMenu} id="pomodoro" handleClick={handleClick}>pomodoro</NavigationButton>
-			<NavigationButton config={config} showMenu={showMenu} id="shortBreak" handleClick={handleClick}>short break</NavigationButton>
-			<NavigationButton config={config} showMenu={showMenu} id="longBreak" handleClick={handleClick}>long break</NavigationButton>
+			<NavigationButton config={config} showMenu={showMenu} id="pomodoro" handleClick={handleClick}>Pomodoro</NavigationButton>
+			<NavigationButton config={config} showMenu={showMenu} id="shortBreak" handleClick={handleClick}>Short break</NavigationButton>
+			<NavigationButton config={config} showMenu={showMenu} id="longBreak" handleClick={handleClick}>Long break</NavigationButton>
 			<Floater
 				initial={{translateX: ANIMATION_TRANSLATE_X[clockType]}}
 			  animate={{translateX: ANIMATION_TRANSLATE_X[clockType]}}
 			  transition={{duration: 0.2, ease: 'easeOut'}}
-				style={{'--background': COLORS[color]}}
+				style={{'--background': `var(--color-${color})`}}
 			/>
 		</Wrapper>
 	)
@@ -32,7 +32,7 @@ const Wrapper = styled.div`
 	margin-left: 24px;
 	margin-right: 24px;
 	border-radius: 31.5px;
-	background: ${COLORS.backgroundDark};
+	background: var(--color-background-dark);
 	display: flex;
 	isolation: isolate;
 	@media ${QUERIES.phoneAndDown} {

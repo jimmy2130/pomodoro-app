@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 import AnimationRing from './AnimationRing';
 import TimerDisplay from './TimerDisplay';
 import UnstyledButton from '../UnstyledButton';
-import { COLORS, FAMILIES, QUERIES } from '../../constants';
+import { QUERIES } from '../../constants';
 import {
 	BUTTON_TEXT,
 	STATUS_TEXT_STYLE,
@@ -12,7 +12,7 @@ import {
 } from './Timer.constants';
 
 const Timer = ({ config, showMenu }) => {
-	const { size, color, fontFamily, clockType } = config
+	const { color, fontFamily, clockType } = config
 	const time = config['time'][clockType]
 	const control = useAnimation()
 	const [animationState, setAnimationState] = useState('start')
@@ -69,11 +69,11 @@ const Timer = ({ config, showMenu }) => {
 			>
 				<StatusText
 					style={{
-						'--font-family': FAMILIES[fontFamily],
+						'--font-family': `var(--font-family-${fontFamily})`,
 						'--position-top': STATUS_TEXT_STYLE[fontFamily]['positionTop'],
 						'--line-height': STATUS_TEXT_STYLE[fontFamily]['lineHeight'],
 						'--translate-x': STATUS_TEXT_STYLE[fontFamily]['translateX'],
-						'--color': COLORS[color],
+						'--color': `var(--color-${color})`,
 
 				}}>
 					{BUTTON_TEXT[animationState].toUpperCase()}
@@ -82,7 +82,6 @@ const Timer = ({ config, showMenu }) => {
 			<AnimationRingWrapper>
 				<AnimationRing
 					color={color}
-					size={size}
 					onComplete={onComplete}
 					key={key}
 					control={control}
@@ -100,8 +99,8 @@ const Timer = ({ config, showMenu }) => {
 					fontFamily={fontFamily}
 				/>
 			</TimerDisplayWrapper>
-			<ClockReference style={{
-				'--font-family': FAMILIES[fontFamily],
+{/*			<ClockReference style={{
+				'--font-family': `var(--font-family-${fontFamily})`,
 				'--position-top': TIMER_TEXT_STYLE[fontFamily]['positionTop'],
 				'--position-left': TIMER_TEXT_STYLE[fontFamily]['positionLeft'],
 				'--line-height': TIMER_TEXT_STYLE[fontFamily]['lineHeight'],
@@ -112,12 +111,12 @@ const Timer = ({ config, showMenu }) => {
 			</ClockReference>
 			<StatusTextReference
 				style={{
-					'--font-family': FAMILIES[fontFamily],
+					'--font-family': `var(--font-family-${fontFamily})`,
 					'--position-top': STATUS_TEXT_STYLE[fontFamily]['positionTop'],
 					'--line-height': STATUS_TEXT_STYLE[fontFamily]['lineHeight'],
 				}}>
 				{BUTTON_TEXT[animationState].toUpperCase()}
-			</StatusTextReference>
+			</StatusTextReference>*/}
 		</Wrapper>
 	)
 }
@@ -141,8 +140,8 @@ const PlayButton = styled(UnstyledButton)`
   width: 366px;
   height: 366px;
   border-radius: 50%;
-  background: ${COLORS.backgroundDark};
-  color: ${COLORS.text};
+  background: var(--color-background-dark);
+  color: var(--color-text);
 `
 
 const StatusText = styled.span`
@@ -187,40 +186,40 @@ const TimerDisplayWrapper = styled.div`
 	left: var(--position-left);
 `
 
-const ClockReference = styled.div`
-	pointer-events: none;
-	position: absolute;
-	top: var(--position-top);
-	left: var(--position-left);
+// const ClockReference = styled.div`
+// 	pointer-events: none;
+// 	position: absolute;
+// 	top: var(--position-top);
+// 	left: var(--position-left);
 
-	font-family: var(--font-family);
-	font-size: 100px;
-	font-weight: var(--font-weight);
-	// border: 1px solid yellow;
-	line-height: var(--line-height);
-	letter-spacing: var(--letter-spacing);
-	color: transparent;
-	pointer-events: none;
-	cursor: pointer;
-`
+// 	font-family: var(--font-family);
+// 	font-size: 100px;
+// 	font-weight: var(--font-weight);
+// 	// border: 1px solid yellow;
+// 	line-height: var(--line-height);
+// 	letter-spacing: var(--letter-spacing);
+// 	color: transparent;
+// 	pointer-events: none;
+// 	cursor: pointer;
+// `
 
-const StatusTextReference = styled.span`
-	position: absolute;
-	top: var(--position-top);
-	left: 0px;
-	right: 0px;
-	margin-left: auto;
-	margin-right: auto;
-	width: fit-content;
-	font-family: var(--font-family);
-	font-size: 16px;
-	font-weight: 700;
-	line-height: var(--line-height);
-	letter-spacing: 15px;
-	// border: 1px solid red;
-	color: transparent;
-	pointer-events: none;
-	cursor: pointer;
-`
+// const StatusTextReference = styled.span`
+// 	position: absolute;
+// 	top: var(--position-top);
+// 	left: 0px;
+// 	right: 0px;
+// 	margin-left: auto;
+// 	margin-right: auto;
+// 	width: fit-content;
+// 	font-family: var(--font-family);
+// 	font-size: 16px;
+// 	font-weight: 700;
+// 	line-height: var(--line-height);
+// 	letter-spacing: 15px;
+// 	// border: 1px solid red;
+// 	color: transparent;
+// 	pointer-events: none;
+// 	cursor: pointer;
+// `
 
 export default Timer;

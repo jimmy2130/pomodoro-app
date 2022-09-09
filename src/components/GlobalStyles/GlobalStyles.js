@@ -61,12 +61,12 @@ html {
 	--color-secondary: ${COLORS.secondary};
 	--color-tertiary: ${COLORS.tertiary};
 	--color-white: ${COLORS.white};
-	--color-offWhite: ${COLORS.offWhite};
+	--color-off-white: ${COLORS.offWhite};
 	--color-text: ${COLORS.text};
 	--color-background: ${COLORS.background};
 	--color-background-dark: ${COLORS.backgroundDark};
 
-  --font-family-sans-serif: ${FAMILIES.sansSerif};
+  --font-family-sansSerif: ${FAMILIES.sansSerif};
   --font-family-serif: ${FAMILIES.serif};
   --font-family-mono: ${FAMILIES.mono};
 }

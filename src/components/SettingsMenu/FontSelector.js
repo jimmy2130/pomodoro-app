@@ -1,6 +1,4 @@
-// import { useRef } from "react";
 import styled from 'styled-components/macro';
-import { COLORS, FAMILIES } from '../../constants';
 
 const FontSelector = ({ children, family, familyId, onChange }) => {
 	return (
@@ -12,12 +10,14 @@ const FontSelector = ({ children, family, familyId, onChange }) => {
   				value={familyId}
   				checked={family === familyId}
   				onChange={(e) => onChange(e.target.value)}
+  				aria-label={`${familyId} font`}
   			/>
   			<FontText
 					style={{
-						'--font-family': FAMILIES[familyId],
+						'--font-family': `var(--font-family-${familyId})`,
 						'--font-weight': familyId === 'serif' ? 400 : 700,
 					}}
+					aria-hidden={true}
   			>
   				{children}
   			</FontText>
@@ -43,10 +43,10 @@ const FontRadioButton = styled.input`
 	width: 40px;
 	height: 40px;
 	border-radius: 50%;
-	background: ${COLORS.offWhite};
+	background: var(--color-off-white);
 
 	&:checked {
-		background: ${COLORS.background};
+		background: var(--color-background);
 	}
 `
 
@@ -59,14 +59,14 @@ const FontText = styled.span`
 	width: 40px;
 	height: 40px;
 	margin: auto;
-	color: ${COLORS.background};
+	color: var(--color-background);
 	font-family: var(--font-family);
 	font-weight: var(--font-weight);
 	display: grid;
 	place-content: center;
 
 	${FontRadioButton}:checked + & {
-		color: ${COLORS.white};
+		color: var(--color-white);
 	}
 `
 
@@ -81,7 +81,7 @@ const HoverRing = styled.span`
 	height: 50px;
 	margin: auto;
 	background: transparent;
-	border: 1px solid ${COLORS.offWhite};
+	border: 1px solid var(--color-off-white);
 	border-radius: 50%;
 	pointer-events: none;
 
