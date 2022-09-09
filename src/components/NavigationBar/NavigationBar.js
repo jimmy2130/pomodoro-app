@@ -1,5 +1,5 @@
 import styled from 'styled-components/macro';
-import { motion } from "framer-motion";
+import { motion, MotionConfig } from "framer-motion";
 import { QUERIES, BREAKPOINTS } from '../../constants';
 import NavigationButton from './NavigationButton';
 
@@ -15,12 +15,14 @@ const NavigationBar = ({ config, handleClick, showMenu, size }) => {
 			<NavigationButton config={config} showMenu={showMenu} id="pomodoro" handleClick={handleClick}>Pomodoro</NavigationButton>
 			<NavigationButton config={config} showMenu={showMenu} id="shortBreak" handleClick={handleClick}>Short break</NavigationButton>
 			<NavigationButton config={config} showMenu={showMenu} id="longBreak" handleClick={handleClick}>Long break</NavigationButton>
-			<Floater
-				initial={{translateX: ANIMATION_TRANSLATE_X[clockType]}}
-			  animate={{translateX: ANIMATION_TRANSLATE_X[clockType]}}
-			  transition={{duration: 0.2, ease: 'easeOut'}}
-				style={{'--background': `var(--color-${color})`}}
-			/>
+			<MotionConfig reducedMotion="user">
+				<Floater
+					initial={{translateX: ANIMATION_TRANSLATE_X[clockType]}}
+				  animate={{translateX: ANIMATION_TRANSLATE_X[clockType]}}
+				  transition={{duration: 0.2, ease: 'easeOut'}}
+					style={{'--background': `var(--color-${color})`}}
+				/>
+			</MotionConfig>
 		</Wrapper>
 	)
 }

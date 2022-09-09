@@ -31,7 +31,7 @@ const SettingsMenu = forwardRef((props, ref) => {
 		backToLast
 	} = getDialogFn(ref, applyBtnRef, contentRef, onDismiss)
 
-	const handleApply = () => {
+	function handleApply() {
 		let clockType = config.clockType
 		let { color, fontFamily, time: { pomodoro, shortBreak, longBreak }} = localConfig
 		setConfig({

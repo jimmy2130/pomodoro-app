@@ -18,8 +18,8 @@ const App = () => {
 		fontFamily: 'sansSerif',  //sansSerif, serif, mono
 		time: {
 			pomodoro: 20,
-			shortBreak: 2,
-			longBreak: 3,
+			shortBreak: 5,
+			longBreak: 10,
 		},
 		clockType: 'pomodoro',
 	})
@@ -63,19 +63,23 @@ const App = () => {
 				}
 			/>
 			<VisuallyHidden>
-				<h1>Pomodoro App</h1>
+				<header>
+					<h1>Pomodoro App</h1>
+				</header>
 			</VisuallyHidden>
 			<LogoWrapper>
 				<Logo/>
 			</LogoWrapper>
 			<Spacer size={size.width > BREAKPOINTS.phoneMax ? 55 : 45}/>
 			<NavigationWrapper>
-				<NavigationBar
-					config={config}
-					handleClick={handleNavClick}
-					showMenu={showMenu}
-					size={size}
-				/>
+				<nav>
+					<NavigationBar
+						config={config}
+						handleClick={handleNavClick}
+						showMenu={showMenu}
+						size={size}
+					/>
+				</nav>
 			</NavigationWrapper>
 			<Spacer
 				size={
@@ -85,7 +89,9 @@ const App = () => {
 				}
 			/>
 			<TimerWrapper>
-				<Timer config={config} showMenu={showMenu} key={timerKey}/>
+				<main>
+					<Timer config={config} showMenu={showMenu} key={timerKey}/>
+				</main>
 			</TimerWrapper>
 			<Spacer
 				size={
@@ -156,6 +162,9 @@ const OpenBtn = styled(UnstyledButton)`
 		& path {
 			opacity: 1;
 		}
+	}
+	&:hover, &:focus {
+		transform: rotate(15deg);
 	}
 `
 

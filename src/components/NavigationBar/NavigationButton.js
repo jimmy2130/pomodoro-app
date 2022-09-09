@@ -9,12 +9,11 @@ const BUTTON_TEXT_SIZE = {
 }
 
 const NavigationButton = ({ children, showMenu, config, id, handleClick }) => {
-	const { color, fontFamily, clockType } = config
+	const { fontFamily, clockType } = config
 	return (
 		<Wrapper
 			onClick={() => handleClick(id)}
 			style={{
-				'--background': clockType === id ? `var(--color-${color})` : 'var(--color-background-dark)',
 				'--font-family': `var(--font-family-${fontFamily})`,
 				'--font-size': BUTTON_TEXT_SIZE[fontFamily],
 				'--color': clockType === id ? 'var(--color-background)' : 'var(--color-text)',
